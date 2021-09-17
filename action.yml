@@ -21,7 +21,7 @@ inputs:
   update-comment:
     description: Update the existing comment if it exists instead of creating a new one
     required: false
-    default: false
+    default: true
 runs:
   using: node12
   main: dist/main.js
