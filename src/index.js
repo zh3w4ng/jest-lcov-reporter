@@ -10,16 +10,16 @@ async function main() {
 	const name = core.getInput("name")
 	const lcovFile = core.getInput("lcov-file") || "./coverage/lcov.info"
 	const baseFile = core.getInput("lcov-base")
-	const updateComment = core.getInput("update-comment")
+	const updateComment = core.getBooleanInput("update-comment")
 
-	const raw = await fs.readFile(lcovFile, "utf-8").catch(err => null)
+	const raw = await fs.readFile(lcovFile, "utf-8").catch((err) => null)
 	if (!raw) {
 		console.log(`No coverage report found at '${lcovFile}', exiting...`)
 		return
 	}
 
 	const baseRaw =
-		baseFile && (await fs.readFile(baseFile, "utf-8").catch(err => null))
+		baseFile && (await fs.readFile(baseFile, "utf-8").catch((err) => null))
 	if (baseFile && !baseRaw) {
 		console.log(`No coverage report found at '${baseFile}', ignoring...`)
 	}
@@ -53,7 +53,7 @@ async function main() {
 			body,
 		})
 
-	const updateGitHubComment = commentId =>
+	const updateGitHubComment = (commentId) =>
 		githubClient.issues.updateComment({
 			repo: context.repo.repo,
 			owner: context.repo.owner,
@@ -68,7 +68,7 @@ async function main() {
 			issue_number: context.payload.pull_request.number,
 		})
 
-		const existingComment = issueComments.data.find(comment =>
+		const existingComment = issueComments.data.find((comment) =>
 			comment.body.includes(commentIdentifier(options.workflowName)),
 		)
 
@@ -81,7 +81,7 @@ async function main() {
 	await createGitHubComment()
 }
 
-export default main().catch(function(err) {
+export default main().catch(function (err) {
 	console.log(err)
 	core.setFailed(err.message)
 })

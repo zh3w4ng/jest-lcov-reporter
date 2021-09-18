@@ -34,6 +34,7 @@ var utils = createCommonjsModule(function (module, exports) {
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.toCommandProperties = exports.toCommandValue = void 0;
 /**
  * Sanitizes an input into a string so it can be passed into issueCommand safely
  * @param input input to sanitize into a string
@@ -48,21 +49,54 @@ function toCommandValue(input) {
     return JSON.stringify(input);
 }
 exports.toCommandValue = toCommandValue;
+/**
+ *
+ * @param annotationProperties
+ * @returns The command properties to send with the actual annotation command
+ * See IssueCommandProperties: https://github.com/actions/runner/blob/main/src/Runner.Worker/ActionCommandManager.cs#L646
+ */
+function toCommandProperties(annotationProperties) {
+    if (!Object.keys(annotationProperties).length) {
+        return {};
+    }
+    return {
+        title: annotationProperties.title,
+        line: annotationProperties.startLine,
+        endLine: annotationProperties.endLine,
+        col: annotationProperties.startColumn,
+        endColumn: annotationProperties.endColumn
+    };
+}
+exports.toCommandProperties = toCommandProperties;
 
 });
 
 unwrapExports(utils);
-var utils_1 = utils.toCommandValue;
+var utils_1 = utils.toCommandProperties;
+var utils_2 = utils.toCommandValue;
 
 var command = createCommonjsModule(function (module, exports) {
+var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.issue = exports.issueCommand = void 0;
 const os$1 = __importStar(os);
 
 /**
@@ -136,19 +170,32 @@ function escapeProperty(s) {
 });
 
 unwrapExports(command);
-var command_1 = command.issueCommand;
-var command_2 = command.issue;
+var command_1 = command.issue;
+var command_2 = command.issueCommand;
 
 var fileCommand = createCommonjsModule(function (module, exports) {
 // For internal use, subject to change.
+var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const fs = __importStar(fs__default);
@@ -174,6 +221,25 @@ unwrapExports(fileCommand);
 var fileCommand_1 = fileCommand.issueCommand;
 
 var core = createCommonjsModule(function (module, exports) {
+var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -183,14 +249,8 @@ var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisAr
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 
 
 
@@ -257,7 +317,9 @@ function addPath(inputPath) {
 }
 exports.addPath = addPath;
 /**
- * Gets the value of an input.  The value is also trimmed.
+ * Gets the value of an input.
+ * Unless trimWhitespace is set to false in InputOptions, the value is also trimmed.
+ * Returns an empty string if the value is not defined.
  *
  * @param     name     name of the input to get
  * @param     options  optional. See InputOptions.
@@ -268,9 +330,49 @@ function getInput(name, options) {
     if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
     }
+    if (options && options.trimWhitespace === false) {
+        return val;
+    }
     return val.trim();
 }
 exports.getInput = getInput;
+/**
+ * Gets the values of an multiline input.  Each value is also trimmed.
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   string[]
+ *
+ */
+function getMultilineInput(name, options) {
+    const inputs = getInput(name, options)
+        .split('\n')
+        .filter(x => x !== '');
+    return inputs;
+}
+exports.getMultilineInput = getMultilineInput;
+/**
+ * Gets the input value of the boolean type in the YAML 1.2 "core schema" specification.
+ * Support boolean input list: `true | True | TRUE | false | False | FALSE` .
+ * The return value is also in boolean type.
+ * ref: https://yaml.org/spec/1.2/spec.html#id2804923
+ *
+ * @param     name     name of the input to get
+ * @param     options  optional. See InputOptions.
+ * @returns   boolean
+ */
+function getBooleanInput(name, options) {
+    const trueValue = ['true', 'True', 'TRUE'];
+    const falseValue = ['false', 'False', 'FALSE'];
+    const val = getInput(name, options);
+    if (trueValue.includes(val))
+        return true;
+    if (falseValue.includes(val))
+        return false;
+    throw new TypeError(`Input does not meet YAML 1.2 "Core Schema" specification: ${name}\n` +
+        `Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
+}
+exports.getBooleanInput = getBooleanInput;
 /**
  * Sets the value of an output.
  *
@@ -279,6 +381,7 @@ exports.getInput = getInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    process.stdout.write(os$1.EOL);
     command.issueCommand('set-output', { name }, value);
 }
 exports.setOutput = setOutput;
@@ -325,19 +428,30 @@ exports.debug = debug;
 /**
  * Adds an error issue
  * @param message error issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function error(message) {
-    command.issue('error', message instanceof Error ? message.toString() : message);
+function error(message, properties = {}) {
+    command.issueCommand('error', utils.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.error = error;
 /**
- * Adds an warning issue
+ * Adds a warning issue
  * @param message warning issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
  */
-function warning(message) {
-    command.issue('warning', message instanceof Error ? message.toString() : message);
+function warning(message, properties = {}) {
+    command.issueCommand('warning', utils.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 exports.warning = warning;
+/**
+ * Adds a notice issue
+ * @param message notice issue message. Errors will be converted to string via toString()
+ * @param properties optional properties to add to the annotation.
+ */
+function notice(message, properties = {}) {
+    command.issueCommand('notice', utils.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+}
+exports.notice = notice;
 /**
  * Writes info to log with console.log.
  * @param message info message
@@ -414,24 +528,27 @@ exports.getState = getState;
 });
 
 var core$1 = unwrapExports(core);
-var core_1 = core.ExitCode;
-var core_2 = core.exportVariable;
-var core_3 = core.setSecret;
-var core_4 = core.addPath;
-var core_5 = core.getInput;
-var core_6 = core.setOutput;
-var core_7 = core.setCommandEcho;
-var core_8 = core.setFailed;
-var core_9 = core.isDebug;
+var core_1 = core.getState;
+var core_2 = core.saveState;
+var core_3 = core.group;
+var core_4 = core.endGroup;
+var core_5 = core.startGroup;
+var core_6 = core.info;
+var core_7 = core.notice;
+var core_8 = core.warning;
+var core_9 = core.error;
 var core_10 = core.debug;
-var core_11 = core.error;
-var core_12 = core.warning;
-var core_13 = core.info;
-var core_14 = core.startGroup;
-var core_15 = core.endGroup;
-var core_16 = core.group;
-var core_17 = core.saveState;
-var core_18 = core.getState;
+var core_11 = core.isDebug;
+var core_12 = core.setFailed;
+var core_13 = core.setCommandEcho;
+var core_14 = core.setOutput;
+var core_15 = core.getBooleanInput;
+var core_16 = core.getMultilineInput;
+var core_17 = core.getInput;
+var core_18 = core.addPath;
+var core_19 = core.setSecret;
+var core_20 = core.exportVariable;
+var core_21 = core.ExitCode;
 
 /*!
  * isobject <https://github.com/jonschlinkert/isobject>
@@ -23065,16 +23182,16 @@ async function main$1() {
 	const name = core$1.getInput("name");
 	const lcovFile = core$1.getInput("lcov-file") || "./coverage/lcov.info";
 	const baseFile = core$1.getInput("lcov-base");
-	const updateComment = core$1.getInput("update-comment");
+	const updateComment = core$1.getBooleanInput("update-comment");
 
-	const raw = await fs.promises.readFile(lcovFile, "utf-8").catch(err => null);
+	const raw = await fs.promises.readFile(lcovFile, "utf-8").catch((err) => null);
 	if (!raw) {
 		console.log(`No coverage report found at '${lcovFile}', exiting...`);
 		return
 	}
 
 	const baseRaw =
-		baseFile && (await fs.promises.readFile(baseFile, "utf-8").catch(err => null));
+		baseFile && (await fs.promises.readFile(baseFile, "utf-8").catch((err) => null));
 	if (baseFile && !baseRaw) {
 		console.log(`No coverage report found at '${baseFile}', ignoring...`);
 	}
@@ -23108,7 +23225,7 @@ async function main$1() {
 			body,
 		});
 
-	const updateGitHubComment = commentId =>
+	const updateGitHubComment = (commentId) =>
 		githubClient.issues.updateComment({
 			repo: github_1.repo.repo,
 			owner: github_1.repo.owner,
@@ -23123,7 +23240,7 @@ async function main$1() {
 			issue_number: github_1.payload.pull_request.number,
 		});
 
-		const existingComment = issueComments.data.find(comment =>
+		const existingComment = issueComments.data.find((comment) =>
 			comment.body.includes(commentIdentifier(options.workflowName)),
 		);
 
@@ -23136,7 +23253,7 @@ async function main$1() {
 	await createGitHubComment();
 }
 
-var index = main$1().catch(function(err) {
+var index = main$1().catch(function (err) {
 	console.log(err);
 	core$1.setFailed(err.message);
 });
